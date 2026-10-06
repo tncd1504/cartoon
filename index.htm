@@ -1,1 +1,145 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kho Phim Hoạt Hình</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #0f172a;
+      color: #f8fafc;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    header {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    h1 { font-size: 1.8rem; margin-bottom: 8px; color: #38bdf8; }
+    
+    /* Khung phát tỉ lệ 16:9 */
+    .player-wrapper {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%; /* 16:9 Aspect Ratio */
+      background: #000;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+    .player-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
 
+    /* Danh sách chọn tập */
+    .episode-section {
+      margin-top: 25px;
+      background: #1e293b;
+      padding: 20px;
+      border-radius: 12px;
+    }
+    .episode-title {
+      font-size: 1.1rem;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+    .episode-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .ep-btn {
+      background: #334155;
+      color: #f8fafc;
+      border: 1px solid #475569;
+      padding: 10px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+    }
+    .ep-btn:hover {
+      background: #0284c7;
+      border-color: #38bdf8;
+    }
+    .ep-btn.active {
+      background: #0284c7;
+      border-color: #38bdf8;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Rạp Phim Hoạt Hình</h1>
+      <p id="current-title">Đang phát: Tập 1</p>
+    </header>
+
+    <!-- Khung phát video -->
+    <div class="player-wrapper">
+      <iframe id="video-frame" src="" allowfullscreen scrolling="no"></iframe>
+    </div>
+
+    <!-- Danh sách tập phim -->
+    <div class="episode-section">
+      <div class="episode-title">Chọn tập phim:</div>
+      <div class="episode-list" id="button-container"></div>
+    </div>
+  </div>
+
+  <script>
+    // DÁN LINK EMBED ONEDRIVE CỦA TỪNG TẬP VÀO ĐÂY:
+    const episodes = [
+      { 
+        title: "Tập 1", 
+        url: "https://onedrive.live.com/embed?resid=LINK_EMBED_TAP_1_CUA_BAN" 
+      },
+      { 
+        title: "Tập 2", 
+        url: "https://onedrive.live.com/embed?resid=LINK_EMBED_TAP_2_CUA_BAN" 
+      }
+      // Bạn có thể thêm tập 3, 4 tiếp bên dưới...
+    ];
+
+    const frame = document.getElementById("video-frame");
+    const currentTitle = document.getElementById("current-title");
+    const container = document.getElementById("button-container");
+
+    function playVideo(index) {
+      const ep = episodes[index];
+      frame.src = ep.url;
+      currentTitle.innerText = `Đang phát: ${ep.title}`;
+
+      document.querySelectorAll(".ep-btn").forEach((btn, idx) => {
+        btn.classList.toggle("active", idx === index);
+      });
+    }
+
+    // Khởi tạo các nút chọn tập
+    episodes.forEach((ep, index) => {
+      const btn = document.createElement("button");
+      btn.className = "ep-btn";
+      btn.innerText = ep.title;
+      btn.onclick = () => playVideo(index);
+      container.appendChild(btn);
+    });
+
+    // Mặc định nạp tập đầu tiên
+    if (episodes.length > 0) {
+      playVideo(0);
+    }
+  </script>
+</body>
+</html>
