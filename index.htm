@@ -23,26 +23,20 @@
     h1 { font-size: 1.8rem; margin-bottom: 8px; color: #38bdf8; }
     #current-title { color: #94a3b8; font-size: 1rem; }
     
-    /* Khung chuẩn tỉ lệ 16:9 cho iframe */
     .player-wrapper {
       position: relative;
       width: 100%;
-      padding-top: 56.25%; /* 16:9 Aspect Ratio */
       background: #000;
       border-radius: 12px;
       overflow: hidden;
       box-shadow: 0 10px 25px rgba(0,0,0,0.6);
     }
-    .player-wrapper iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
+    .player-wrapper video {
       width: 100%;
-      height: 100%;
-      border: none;
+      max-height: 540px;
+      display: block;
     }
 
-    /* Danh sách chọn tập */
     .episode-section {
       margin-top: 25px;
       background: #152238;
@@ -85,12 +79,15 @@
   <div class="container">
     <header>
       <h1>Rạp Phim Hoạt Hình</h1>
-      <p id="current-title">Đang phát: Tom & Jerry</p>
+      <p id="current-title">Đang phát: Tom & Jerry Tập 1</p>
     </header>
 
-    <!-- Khung phát dùng IFRAME cho Archive.org -->
+    <!-- Trình phát video chuẩn -->
     <div class="player-wrapper">
-      <iframe id="video-frame" src="" allowfullscreen frameborder="0"></iframe>
+      <video id="video-player" controls preload="auto">
+        <source id="video-source" src="" type="video/mp4">
+        Trình duyệt không hỗ trợ thẻ video.
+      </video>
     </div>
 
     <!-- Danh sách tập phim -->
@@ -103,19 +100,21 @@
   <script>
     const episodes = [
       { 
-        title: "Tom & Jerry", 
-        url: "https://archive.org/embed/youtube-4AlelC_OVFc" 
+        title: "Tom & Jerry - Tập 1", 
+        url: "https://archive.org/download/youtube-4AlelC_OVFc/Tom_and_Jerry_001_Puss_Gets_the_Boot_1940.mp4" 
       }
-      // Thêm các tập khác: { title: "Tập 2", url: "https://archive.org/embed/ID_VIDEO" },
     ];
 
-    const frame = document.getElementById("video-frame");
+    const player = document.getElementById("video-player");
+    const source = document.getElementById("video-source");
     const currentTitle = document.getElementById("current-title");
     const container = document.getElementById("button-container");
 
     function playVideo(index) {
       const ep = episodes[index];
-      frame.src = ep.url;
+      source.src = ep.url;
+      player.load();
+      player.play().catch(() => {});
       currentTitle.innerText = `Đang phát: ${ep.title}`;
 
       document.querySelectorAll(".ep-btn").forEach((btn, idx) => {
